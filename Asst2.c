@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <ctype.h>
 #include <math.h>
+#include <string.h>
 #include "structures.h"
 
 
@@ -147,7 +148,7 @@ void* fileHandle(void* input) {
 	    while(!isspace(c)){
 		    i = 0;
 	        if (i == maxSize-1){
-		        realloc(token, 2*maxSize);
+		        token = realloc(token, 2*maxSize);
 		        maxSize *= 2;
             }
 		    if (isalpha(c) || c == '-'){
@@ -170,7 +171,7 @@ void* fileHandle(void* input) {
     }
     free(token);
     fclose(fp);
-    mutex_lock(parameters->lock);
+    pthread_mutex_lock(parameters->lock);
     parentNode* curFile;
     if (totalTokens == 0){
 	    printf("No tokens in file: %s",parameters->dirName);
@@ -208,7 +209,7 @@ void* fileHandle(void* input) {
             curFile = newNode;
         }
     }
-    mutex_unlock(parameters->lock);
+    pthread_mutex_unlock(parameters->lock);
 	for (int i = 0; i < 1000; i++){
 		node* ptr = hashTable[i];
 		while (ptr != NULL){
