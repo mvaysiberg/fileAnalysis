@@ -44,5 +44,10 @@ typedef struct _file_args {
     pthread_mutex_t* lock;
     parentNode* distributions;
 } file_args;
-
+int getBucket(char string[]);
+void insertHash(node** hashTable, char string[]);
+node* searchHash(node** hashTable, char string[]);
+void freeHash(node** hashTable);
+void insertToken(node* token, int totalTokens, parentNode* head);
+void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second);
 #endif
