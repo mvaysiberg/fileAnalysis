@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include "structures.h"
 
 int getBucket(char string[]) {

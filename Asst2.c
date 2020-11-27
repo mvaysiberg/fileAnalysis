@@ -86,8 +86,8 @@ int main(int argc, char* argv[]){
 
 double JSD(parentNode* file1, parentNode* file2){
     node* meanptr = mean(file1, file2);
-    double kld1 = kld(meanptr, file1);
-    double kld2 = kld(meanptr, file2);
+    double kld1 = KLD(meanptr, file1);
+    double kld2 = KLD(meanptr, file2);
     return 0.5*(kld1 + kld2);
 }
 
