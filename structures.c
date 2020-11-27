@@ -91,3 +91,28 @@ void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second)
         }
     }
 }
+
+void freeThread(threadNode* head){
+    while(head!=NULL) {
+        pthread_join(head->thread, NULL);
+        threadNode* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+void freeDistributions(parentNode* head){
+    while (head != NULL){
+        free(head->string);
+        node* childptr = head->firstChild;
+        while (childptr != NULL){
+            node* temp = childptr->next;
+            free(childptr);
+            free(childptr->string);
+            childptr = temp;
+        }
+        parentNode* temp = head->next;
+        free(head);
+        head = temp;
+    }
+}
