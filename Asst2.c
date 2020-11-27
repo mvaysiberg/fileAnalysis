@@ -7,46 +7,8 @@
 #include <fcntl.h>
 #include <ctype.h>
 #include <math.h>
+#include "structures.h"
 
-typedef struct _node{
-   char* string;
-   double count;
-   struct _node* next;
-} node;
-
-typedef struct _parentNode{
-   char* string;
-   int count;
-   struct _parentNode* next;
-  node* firstChild; 
-} parentNode;
-
-typedef struct _nodePair{
-	parentNode* first;
-	parentNode* second;
-	int sum;
-	struct _nodePair* next;
-	struct _nodePair* prev; 
-} nodePair;
-
-typedef struct _threadNode{
-	struct _threadNode* next;
-	pthread_t thread;
-} threadNode;
-
-typedef struct arg_struct {
-    DIR* currDir;
-    char* dirName;
-    pthread_mutex_t* lock;
-    threadNode* tail;
-    parentNode* distributions;
-} args;
-
-typedef struct _file_args {
-    char* dirName;
-    pthread_mutex_t* lock;
-    parentNode* distributions;
-} file_args;
 
 void* directoryHandle(void* input) {
     args *parameters = (args*)input;
