@@ -377,7 +377,30 @@ double JSD(parentNode* file1, parentNode* file2){
     return 0.5*(kld1 + kld2);
 }
 
+void freeThread(threadNode* head){
+    while(head!=NULL) {
+        pthread_join(head->thread, NULL);
+        threadNode* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
 
+void freeDistributions(parentNode* head){
+    while (head != NULL){
+        free(head->string);
+        node* childptr = head->firstChild;
+        while (childptr != NULL){
+            node* temp = childptr->next;
+            free(childptr);
+            free(childptr->string);
+            childptr = temp;
+        }
+        parentNode* temp = ptr->next;
+        free(head);
+        head = temp;
+    }
+}
 
 
 int main(int argc, char* argv[]){
@@ -410,12 +433,7 @@ int main(int argc, char* argv[]){
 
     pthread_create(&(head->thread), NULL, directoryHandle, (void*)arguments);
 
-    while(head!=NULL) {
-        pthread_join(head->thread, NULL);
-        threadNode* temp = head;
-        head = head->next;
-        free(temp);
-    }
+    freeThread(head);
 
     if(distributions == NULL) {
         printf("No files\n");
@@ -437,7 +455,7 @@ int main(int argc, char* argv[]){
                     totalTokens = totalTokensTail;
                 }
             }
-            Ptr = ptr->next;
+            ptr = ptr->next;
         }
         while(totalTokens != NULL) {
             printJSD(JSD(totalTokens->first, totalTokens->second), totalTokens->first->string, totalTokens->second->string);
@@ -446,20 +464,7 @@ int main(int argc, char* argv[]){
             totalTokens = temp;
         }
     }
-    parentNode* ptr = distributions;
-    while (ptr != NULL){
-        free(ptr->string);
-        node* childptr = ptr->firstChild;
-        while (childptr != NULL){
-            node* temp = childptr->next;
-            free(childptr);
-            free(childptr->string);
-            childptr = temp;
-        }
-        parentNode* temp = ptr->next;
-        free(ptr);
-        ptr = temp;
-    }
+    freeDistributions(distributions);
     pthread_mutex_destroy(mutex);
     free(mutex);
 }
