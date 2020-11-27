@@ -6,7 +6,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <ctype.h>
-#include <cmath.h>
+#include <math.h>
 
 typedef struct _node{
    char* string;
@@ -105,7 +105,7 @@ int getBucket(char string[]) {
 }
 
 void insertHash(node** hashTable, char string[]) {
-	int bucket = getBucket(string, strlen(string));
+	int bucket = getBucket(string);
     node* newNode = malloc(sizeof(node));
 	newNode->string = string;
 	newNode->count = 1;
@@ -259,7 +259,7 @@ void* fileHandle(void* input) {
 }
 
 void printJSD(double value, char* file1, char* file2) {
-    if(value >= 0 && <= 0.1) {
+    if(value >= 0 && value <= 0.1) {
         printf("\033[0;31m");
     }
     else if(value <= 0.15) {
@@ -281,9 +281,9 @@ void printJSD(double value, char* file1, char* file2) {
 void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second) {
 
     nodePair* newNode = malloc(sizeof(nodePair));
-    nodePair->sum = sum;
-    nodePair->first = first;
-    nodePair->second = second;
+    newNode->sum = sum;
+    newNode->first = first;
+    newNode->second = second;
     if (*tail == NULL){
         newNode->prev = NULL;
         newNode->next = NULL;
@@ -361,7 +361,7 @@ double KLD(node* mean, parentNode* file) {
     double sum = 0.0;
     node* ptr = file->firstChild;
     while (ptr != NULL){
-        while(strcmp(mean->string, ptr->string) != 0)){
+        while(strcmp(mean->string, ptr->string) != 0){
             mean = mean->next;
         }
         sum += ptr->count*log(ptr->count/mean->count);
@@ -396,7 +396,7 @@ void freeDistributions(parentNode* head){
             free(childptr->string);
             childptr = temp;
         }
-        parentNode* temp = ptr->next;
+        parentNode* temp = head->next;
         free(head);
         head = temp;
     }
@@ -416,7 +416,7 @@ int main(int argc, char* argv[]){
         printf("invalid file\n");
         exit(0);
     }
-    pthread_mutex_t *mutex = malloc(sizeof(mutex_t));
+    pthread_mutex_t *mutex = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(mutex, NULL);
 
     threadNode* head = malloc(sizeof(threadNode));
