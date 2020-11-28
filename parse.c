@@ -16,7 +16,6 @@ void* directoryHandle(void* input) {
     readdir(parameters->currDir);
     readdir(parameters->currDir);
     struct dirent* dir = NULL;
-    printf("%s\n", parameters->dirName);
     while ((dir = readdir(parameters->currDir)) != NULL) {
         //concatenate previous file path to current file 
         int curDirL = strlen(parameters->dirName);
@@ -62,7 +61,6 @@ void* directoryHandle(void* input) {
 
 void* fileHandle(void* input) {
 	file_args *parameters = (file_args*)input;
-    printf("%s\n", parameters->dirName);
     FILE* fp = fopen(parameters->dirName, "r");
     if(fp== NULL) {
         printf("File not accessible: %s\n", parameters->dirName);
@@ -81,7 +79,6 @@ void* fileHandle(void* input) {
         char c = fgetc(fp);
         token[0] = '\0';
 	    int i = 0;
-        printf("%c", c);
 	    while(!isspace(c)){
 	        if (i == maxSize-1){
 		        token = realloc(token, 2*maxSize);
@@ -95,7 +92,6 @@ void* fileHandle(void* input) {
             if(feof(fp)) {
                 break;
             }
-            printf("%c", c);
         }
         token[i] = '\0';
         if(strcmp(token, "") != 0) {
