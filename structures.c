@@ -110,7 +110,7 @@ void freeDistributions(parentNode* head){
         while (childptr != NULL){
             node* temp = childptr->next;
             free(childptr->string);
-	    free(childptr);
+	        free(childptr);
             childptr = temp;
         }
         parentNode* temp = head->next;
