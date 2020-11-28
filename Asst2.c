@@ -119,7 +119,7 @@ node* mean(parentNode* file1, parentNode* file2) {
     while(ptr1 != NULL && ptr2 != NULL) {
         node* newNode = malloc(sizeof(node));
         newNode->next = NULL;
-        if(output = NULL) {
+        if(output == NULL) {
             output = newNode;
             ptr = newNode;
         }
