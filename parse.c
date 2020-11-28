@@ -62,7 +62,7 @@ void* fileHandle(void* input) {
 	file_args *parameters = (file_args*)input;
     FILE* fp = fopen(parameters->dirName, "r");
     if(fp== NULL) {
-        printf("File not accessible\n");
+        printf("File not accessible: %s\n", parameters->dirName);
         free(parameters->dirName);
         free(parameters);
         pthread_exit(NULL);
