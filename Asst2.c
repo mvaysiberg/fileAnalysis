@@ -20,15 +20,15 @@ double KLD(node* mean, parentNode* file);
 
 int main(int argc, char* argv[]){
     if (argc == 1){
-        printf("No input");
+        printf("No input\n");
         exit(0);
     }else if (argc > 2){
-        printf("More than one directory");
+        printf("More than one directory\n");
         exit(0);
     }
     DIR* currDir = opendir(argv[1]);
     if (currDir == NULL){
-        printf("invalid file\n");
+        printf("Invalid file\n");
         exit(0);
     }
     pthread_mutex_t *mutex = malloc(sizeof(pthread_mutex_t));
