@@ -42,7 +42,7 @@ void freeHash(node** hashTable) {
 		node* freePtr = hashTable[i];
 		while(freePtr != NULL) {
 			node* temp = freePtr->next;
-			freePtr->string;
+			free(freePtr->string);
 			free(freePtr);
 			freePtr = temp;
        	}
