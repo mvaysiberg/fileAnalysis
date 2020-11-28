@@ -52,5 +52,6 @@ void insertToken(node* token, int totalTokens, parentNode** head);
 void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second);
 void freeThread(threadNode* head);
 void freeDistributions(parentNode* head);
+void freeNode(node* ptr);
 
 #endif

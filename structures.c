@@ -117,3 +117,11 @@ void freeDistributions(parentNode* head){
         head = temp;
     }
 }
+
+void freeNode(node* ptr){
+    while (ptr != NULL){
+        node* temp = ptr->next;
+        free(ptr);
+        ptr = temp;
+    }
+}
