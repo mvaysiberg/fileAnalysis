@@ -150,6 +150,7 @@ node* mean(parentNode* file1, parentNode* file2) {
     }
     while(ptr1 != NULL) {
         node* newNode = malloc(sizeof(node));
+        newNode->next = NULL;
         if(output == NULL) {
             output = newNode;
             ptr = newNode;
@@ -158,15 +159,13 @@ node* mean(parentNode* file1, parentNode* file2) {
             ptr->next = newNode;
             ptr = ptr->next;
         }
-        newNode->next = NULL;
-        ptr->next = newNode;
-        ptr = ptr->next;
         newNode->string = ptr1->string;
         newNode->count = 0.5*ptr1->count;
         ptr1 = ptr1->next;
     }
     while(ptr2 != NULL) {
         node* newNode = malloc(sizeof(node));
+        newNode->next = NULL;
         if(output == NULL) {
             output = newNode;
             ptr = newNode;
@@ -175,9 +174,6 @@ node* mean(parentNode* file1, parentNode* file2) {
             ptr->next = newNode;
             ptr = ptr->next;
         }
-        newNode->next = NULL;
-        ptr->next = newNode;
-        ptr = ptr->next;
         newNode->string = ptr2->string;
         newNode->count = 0.5*ptr2->count;
         ptr2 = ptr2->next;
