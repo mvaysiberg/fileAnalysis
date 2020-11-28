@@ -48,8 +48,8 @@ void freeHash(node** hashTable) {
 	}
 }
 
-void insertToken(node* token, int totalTokens, parentNode** head) {
-	node* ptr = (*head)->firstChild;
+void insertToken(node* token, int totalTokens, node** head) {
+	node* ptr = *head;
 	node* prev = NULL;
 	node* newNode = malloc(sizeof(node));
 	newNode->string = token->string;
@@ -59,8 +59,8 @@ void insertToken(node* token, int totalTokens, parentNode** head) {
 	    ptr = ptr->next;
     }
     if(prev == NULL) {
-	    newNode->next = (*head)->firstChild;
-        (*head)->firstChild = newNode;
+	    newNode->next = *head;
+        *head = newNode;
     }
     else {
         newNode->next = ptr;

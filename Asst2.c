@@ -76,8 +76,7 @@ int main(int argc, char* argv[]){
         }
         while(totalTokens != NULL) {
             printJSD(JSD(totalTokens->first, totalTokens->second), totalTokens->first->string, totalTokens->second->string);
-	    printf("%d %d\n", totalTokens->first->count, totalTokens->second->count);//
-	    nodePair* temp = totalTokens->next;
+	        nodePair* temp = totalTokens->next;
             free(totalTokens);
             totalTokens = temp;
         }
@@ -91,12 +90,6 @@ double JSD(parentNode* file1, parentNode* file2){
     node* meanptr = mean(file1, file2);
     double kld1 = KLD(meanptr, file1);
     double kld2 = KLD(meanptr, file2);
-    node* ptr = meanptr;//
-    while (ptr != NULL){//
-    	printf("%lf %s ", ptr->count, ptr->string);//
-	ptr = ptr->next;//
-    }//
-    printf("\n");//
     freeNode(meanptr);
     return 0.5*(kld1 + kld2);
 }
@@ -129,14 +122,6 @@ node* mean(parentNode* file1, parentNode* file2) {
     while(ptr1 != NULL && ptr2 != NULL) {
         node* newNode = malloc(sizeof(node));
         newNode->next = NULL;
-        if(output == NULL) {
-            output = newNode;
-            ptr = newNode;
-        }
-        else {
-            ptr->next = newNode;
-            ptr = ptr->next;
-        }
         if(strcmp(ptr1->string, ptr2->string) == 0) {
             newNode->string = ptr1->string;
             newNode->count = 0.5*(ptr1->count + ptr2->count);
@@ -154,10 +139,22 @@ node* mean(parentNode* file1, parentNode* file2) {
             newNode->count = 0.5*ptr2->count;
             ptr2 = ptr2->next;
         }
+        if(output == NULL) {
+            output = newNode;
+            ptr = newNode;
+        }
+        else {
+            ptr->next = newNode;
+            ptr = ptr->next;
+        }
+
     }
     while(ptr1 != NULL) {
         node* newNode = malloc(sizeof(node));
         newNode->next = NULL;
+        newNode->string = ptr1->string;
+        newNode->count = 0.5*ptr1->count;
+        ptr1 = ptr1->next;
         if(output == NULL) {
             output = newNode;
             ptr = newNode;
@@ -166,13 +163,13 @@ node* mean(parentNode* file1, parentNode* file2) {
             ptr->next = newNode;
             ptr = ptr->next;
         }
-        newNode->string = ptr1->string;
-        newNode->count = 0.5*ptr1->count;
-        ptr1 = ptr1->next;
     }
     while(ptr2 != NULL) {
         node* newNode = malloc(sizeof(node));
         newNode->next = NULL;
+        newNode->string = ptr2->string;
+        newNode->count = 0.5*ptr2->count;
+        ptr2 = ptr2->next;
         if(output == NULL) {
             output = newNode;
             ptr = newNode;
@@ -181,9 +178,6 @@ node* mean(parentNode* file1, parentNode* file2) {
             ptr->next = newNode;
             ptr = ptr->next;
         }
-        newNode->string = ptr2->string;
-        newNode->count = 0.5*ptr2->count;
-        ptr2 = ptr2->next;
     }
     return output;
 }

@@ -118,15 +118,22 @@ void* fileHandle(void* input) {
     free(token);
     fclose(fp);
     
+    node* head = NULL;
+    for(int i = 0; i < 1000; i++){
+		node* ptr = hashTable[i];
+		while (ptr != NULL){
+	        insertToken(ptr, totalTokens, &head);
+            ptr = ptr->next;
+        }
+    }
+
     pthread_mutex_lock(parameters->lock);
-    parentNode** curFile;
     if(*(parameters->distributions) == NULL) {
         *(parameters->distributions) = malloc(sizeof(parentNode));
         (*(parameters->distributions))->next = NULL;
         (*(parameters->distributions))->string = parameters->dirName;
         (*(parameters->distributions))->count = totalTokens;
-        (*(parameters->distributions))->firstChild = NULL;
-        curFile = parameters->distributions;
+        (*(parameters->distributions))->firstChild = head;
     }
     else {
         parentNode* ptr = *(parameters->distributions);
@@ -134,7 +141,7 @@ void* fileHandle(void* input) {
         parentNode* newNode = malloc(sizeof(parentNode));
         newNode->string = parameters->dirName;
         newNode->count = totalTokens;
-        newNode->firstChild = NULL;
+        newNode->firstChild = head;
         while(ptr != NULL && ptr->count < newNode->count){
             prev = ptr;
             ptr = ptr->next;
@@ -148,17 +155,9 @@ void* fileHandle(void* input) {
             newNode->next = ptr;
             prev->next = newNode;
         }
-        curFile = &newNode;
     }
     pthread_mutex_unlock(parameters->lock);
     
-	for(int i = 0; i < 1000; i++){
-		node* ptr = hashTable[i];
-		while (ptr != NULL){
-	        insertToken(ptr, totalTokens, curFile);
-            ptr = ptr->next;
-        }
-    }
     free(parameters);
     freeHash(hashTable);
     pthread_exit(NULL);
