@@ -76,7 +76,8 @@ int main(int argc, char* argv[]){
         }
         while(totalTokens != NULL) {
             printJSD(JSD(totalTokens->first, totalTokens->second), totalTokens->first->string, totalTokens->second->string);
-            nodePair* temp = totalTokens->next;
+	    printf("%d %d\n", totalTokens->first->count, totalTokens->second->count);//
+	    nodePair* temp = totalTokens->next;
             free(totalTokens);
             totalTokens = temp;
         }
@@ -90,6 +91,12 @@ double JSD(parentNode* file1, parentNode* file2){
     node* meanptr = mean(file1, file2);
     double kld1 = KLD(meanptr, file1);
     double kld2 = KLD(meanptr, file2);
+    node* ptr = meanptr;//
+    while (ptr != NULL){//
+    	printf("%lf %s ", ptr->count, ptr->string);//
+	ptr = ptr->next;//
+    }//
+    printf("\n");//
     freeNode(meanptr);
     return 0.5*(kld1 + kld2);
 }
