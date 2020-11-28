@@ -98,10 +98,10 @@ void* fileHandle(void* input) {
 	        ++totalTokens;
             node* repeatToken = searchHash(hashTable, token);
             if (repeatToken == NULL){
-		int tokenLength = strlen(token);
-		char* tokenCopy = malloc(tokenLength + 1);
-		strcpy(tokenCopy, token);
-		tokenCopy[tokenLength] = '\0';
+                int tokenLength = strlen(token);
+                char* tokenCopy = malloc(tokenLength + 1);
+                strcpy(tokenCopy, token);
+                tokenCopy[tokenLength] = '\0';
                 insertHash(hashTable, tokenCopy);
             }
             else{
@@ -114,41 +114,35 @@ void* fileHandle(void* input) {
     
     pthread_mutex_lock(parameters->lock);
     parentNode** curFile;
-    if (totalTokens == 0){
-	    printf("No tokens in file: %s",parameters->dirName);
-	    free(parameters->dirName);
+    if(*(parameters->distributions) == NULL) {
+        *(parameters->distributions) = malloc(sizeof(parentNode));
+        (*(parameters->distributions))->next = NULL;
+        (*(parameters->distributions))->string = parameters->dirName;
+        (*(parameters->distributions))->count = totalTokens;
+        (*(parameters->distributions))->firstChild = NULL;
+        curFile = parameters->distributions;
     }
     else {
-        if(*(parameters->distributions) == NULL) {
-            *(parameters->distributions) = malloc(sizeof(parentNode));
-            (*(parameters->distributions))->next = NULL;
-            (*(parameters->distributions))->string = parameters->dirName;
-            (*(parameters->distributions))->count = totalTokens;
-            (*(parameters->distributions))->firstChild = NULL;
-            curFile = parameters->distributions;
+        parentNode* ptr = *(parameters->distributions);
+        parentNode* prev = NULL;
+        parentNode* newNode = malloc(sizeof(parentNode));
+        newNode->string = parameters->dirName;
+        newNode->count = totalTokens;
+        newNode->firstChild = NULL;
+        while(ptr != NULL && ptr->count < newNode->count){
+            prev = ptr;
+            ptr = ptr->next;
         }
-        else {
-            parentNode* ptr = *(parameters->distributions);
-            parentNode* prev = NULL;
-            parentNode* newNode = malloc(sizeof(parentNode));
-            newNode->string = parameters->dirName;
-            newNode->count = totalTokens;
-            newNode->firstChild = NULL;
-            while(ptr != NULL && ptr->count < newNode->count){
-                prev = ptr;
-                ptr = ptr->next;
-            }
-            if(prev == NULL) {
-                newNode->next = *(parameters->distributions);
-                *(parameters->distributions) = newNode;
-            }
-            else
-            {
-                newNode->next = ptr;
-                prev->next = newNode;
-            }
-            curFile = &newNode;
+        if(prev == NULL) {
+            newNode->next = *(parameters->distributions);
+            *(parameters->distributions) = newNode;
         }
+        else
+        {
+            newNode->next = ptr;
+            prev->next = newNode;
+        }
+        curFile = &newNode;
     }
     pthread_mutex_unlock(parameters->lock);
     
