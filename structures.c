@@ -69,7 +69,6 @@ void insertToken(node* token, int totalTokens, parentNode** head) {
 }
 
 void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second) {
-
     nodePair* newNode = malloc(sizeof(nodePair));
     newNode->sum = sum;
     newNode->first = first;
@@ -89,6 +88,9 @@ void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second)
         newNode->prev = prevPtr;
         if(temp != NULL){
             temp->prev = newNode;
+        }
+        else {
+            *tail = newNode;
         }
     }
 }
