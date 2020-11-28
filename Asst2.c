@@ -175,7 +175,7 @@ double KLD(node* mean, parentNode* file) {
         while(strcmp(mean->string, ptr->string) != 0){
             mean = mean->next;
         }
-        sum += ptr->count*log(ptr->count/mean->count);
+        sum += ptr->count*log10(ptr->count/mean->count);
         ptr = ptr->next;
     }
     return sum;
