@@ -77,17 +77,8 @@ void* fileHandle(void* input) {
     int totalTokens = 0;
     int maxSize = 10;
     char* token = malloc(maxSize);
-    printf("before while loop\n");
-    if(feof(fp)) {
-        printf("end of file\n");
-    }
-    else {
-        printf("not at end\n");
-    }
-    printf("after feof check\n");
     while(!feof(fp)){
         char c = fgetc(fp);
-        printf("got c!\n");
         token[0] = '\0';
 	    int i = 0;
         printf("%c", c);
@@ -111,7 +102,11 @@ void* fileHandle(void* input) {
 	        ++totalTokens;
             node* repeatToken = searchHash(hashTable, token);
             if (repeatToken == NULL){
-                insertHash(hashTable, token);
+		int tokenLength = strlen(token);
+		char* tokenCopy = malloc(tokenLength + 1);
+		strcpy(tokenCopy, token);
+		tokenCopy[tokenLength] = '\0';
+                insertHash(hashTable, tokenCopy);
             }
             else{
                 repeatToken->count += 1;
@@ -139,7 +134,7 @@ void* fileHandle(void* input) {
         else {
             parentNode* ptr = *(parameters->distributions);
             parentNode* prev = NULL;
-            parentNode* newNode = malloc(sizeof(node*));
+            parentNode* newNode = malloc(sizeof(parentNode));
             newNode->string = parameters->dirName;
             newNode->count = totalTokens;
             newNode->firstChild = NULL;
