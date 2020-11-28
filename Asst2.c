@@ -169,6 +169,9 @@ node* mean(parentNode* file1, parentNode* file2) {
 }
 
 double KLD(node* mean, parentNode* file) {
+    if(mean == NULL) {
+        return 0;
+    }
     double sum = 0.0;
     node* ptr = file->firstChild;
     while (ptr != NULL){
