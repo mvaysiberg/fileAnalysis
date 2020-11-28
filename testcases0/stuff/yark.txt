@@ -1,3 +1,0 @@
-cat cat cat cat
-dog dog dog
-doge

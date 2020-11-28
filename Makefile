@@ -1,5 +1,5 @@
 all: Asst2.c structures.o parse.o
-	gcc Asst2.c -o detector structures.o parse.o -lm -lpthread -Wall -fsanitize=address
+	gcc Asst2.c -o detector structures.o parse.o -lm -lpthread -Wall
 structures.o: structures.c structures.h
 	gcc -c structures.c
 parse.o: parse.c parse.h
