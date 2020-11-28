@@ -90,7 +90,7 @@ double JSD(parentNode* file1, parentNode* file2){
     node* meanptr = mean(file1, file2);
     double kld1 = KLD(meanptr, file1);
     double kld2 = KLD(meanptr, file2);
-    freeNode(mean);
+    freeNode(meanptr);
     return 0.5*(kld1 + kld2);
 }
 
