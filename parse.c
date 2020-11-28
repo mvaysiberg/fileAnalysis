@@ -38,20 +38,26 @@ void* directoryHandle(void* input) {
             parameters->tail = newNode;
             arguments->tail = newNode;
             pthread_mutex_unlock(parameters->lock);
+
             pthread_create(&((parameters->tail)->thread), NULL, directoryHandle, (void*)arguments);
         }
         else if(dir->d_type == DT_REG) {
+            file_args* fileArgs = malloc(sizeof(file_args));
+            fileArgs->dirName = filePath;
+            fileArgs->lock = parameters->lock;
+            fileArgs->distributions = parameters->distributions;
+            
             pthread_mutex_lock(parameters->lock);
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
             (parameters->tail)->next = newNode;
             parameters->tail = newNode;
             pthread_mutex_unlock(parameters->lock);
-            file_args* fileArgs = malloc(sizeof(file_args));
-            fileArgs->dirName = filePath;
-            fileArgs->lock = parameters->lock;
-            fileArgs->distributions = parameters->distributions;
+
             pthread_create(&((parameters->tail)->thread), NULL, fileHandle, (void*)fileArgs);
+        }
+        else {
+            free(filePath);
         }
     }
     free(parameters->dirName);
