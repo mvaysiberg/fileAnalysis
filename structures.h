@@ -36,19 +36,19 @@ typedef struct arg_struct {
     char* dirName;
     pthread_mutex_t* lock;
     threadNode* tail;
-    parentNode* distributions;
+    parentNode** distributions;
 } args;
 
 typedef struct _file_args {
     char* dirName;
     pthread_mutex_t* lock;
-    parentNode* distributions;
+    parentNode** distributions;
 } file_args;
 int getBucket(char string[]);
 void insertHash(node** hashTable, char string[]);
 node* searchHash(node** hashTable, char string[]);
 void freeHash(node** hashTable);
-void insertToken(node* token, int totalTokens, parentNode* head);
+void insertToken(node* token, int totalTokens, parentNode** head);
 void insertPair(nodePair** tail, int sum, parentNode* first, parentNode* second);
 void freeThread(threadNode* head);
 void freeDistributions(parentNode* head);

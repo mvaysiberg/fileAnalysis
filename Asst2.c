@@ -44,11 +44,13 @@ int main(int argc, char* argv[]){
     strcpy(arguments->dirName, argv[1]);
     arguments->lock = mutex;
     arguments->tail = head;
-    arguments->distributions = distributions;
+    arguments->distributions = &distributions;
 
     pthread_create(&(head->thread), NULL, directoryHandle, (void*)arguments);
-
+    
     freeThread(head);
+
+    
 
     if(distributions == NULL) {
         printf("No files\n");

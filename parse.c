@@ -16,12 +16,14 @@ void* directoryHandle(void* input) {
     readdir(parameters->currDir);
     readdir(parameters->currDir);
     struct dirent* dir = NULL;
+    printf("%s\n", parameters->dirName);
     while ((dir = readdir(parameters->currDir)) != NULL) {
         //concatenate previous file path to current file 
         int curDirL = strlen(parameters->dirName);
         char* filePath = malloc(curDirL + strlen(dir->d_name) + 2);
         filePath = strcpy(filePath,parameters->dirName);
         filePath[curDirL] = '/';
+        filePath[curDirL+1] = '\0';
         strcat(filePath, dir->d_name);
         if (dir->d_type == DT_DIR) {
             args* arguments = malloc(sizeof(args));
@@ -60,6 +62,7 @@ void* directoryHandle(void* input) {
 
 void* fileHandle(void* input) {
 	file_args *parameters = (file_args*)input;
+    printf("%s\n", parameters->dirName);
     FILE* fp = fopen(parameters->dirName, "r");
     if(fp== NULL) {
         printf("File not accessible: %s\n", parameters->dirName);
@@ -74,12 +77,21 @@ void* fileHandle(void* input) {
     int totalTokens = 0;
     int maxSize = 10;
     char* token = malloc(maxSize);
+    printf("before while loop\n");
+    if(feof(fp)) {
+        printf("end of file\n");
+    }
+    else {
+        printf("not at end\n");
+    }
+    printf("after feof check\n");
     while(!feof(fp)){
         char c = fgetc(fp);
+        printf("got c!\n");
         token[0] = '\0';
 	    int i = 0;
+        printf("%c", c);
 	    while(!isspace(c)){
-		    i = 0;
 	        if (i == maxSize-1){
 		        token = realloc(token, 2*maxSize);
 		        maxSize *= 2;
@@ -89,8 +101,12 @@ void* fileHandle(void* input) {
 			    ++i;
             }
             c = fgetc(fp);
+            if(feof(fp)) {
+                break;
+            }
+            printf("%c", c);
         }
-        token[i+1] = '\0';
+        token[i] = '\0';
         if(strcmp(token, "") != 0) {
 	        ++totalTokens;
             node* repeatToken = searchHash(hashTable, token);
@@ -104,23 +120,24 @@ void* fileHandle(void* input) {
     }
     free(token);
     fclose(fp);
+    
     pthread_mutex_lock(parameters->lock);
-    parentNode* curFile;
+    parentNode** curFile;
     if (totalTokens == 0){
 	    printf("No tokens in file: %s",parameters->dirName);
 	    free(parameters->dirName);
     }
     else {
-        if(parameters->distributions == NULL) {
-            parameters->distributions = malloc(sizeof(parentNode));
-            (parameters->distributions)->next = NULL;
-            (parameters->distributions)->string = parameters->dirName;
-            (parameters->distributions)->count = totalTokens;
-            (parameters->distributions)->firstChild = NULL;
+        if(*(parameters->distributions) == NULL) {
+            *(parameters->distributions) = malloc(sizeof(parentNode));
+            (*(parameters->distributions))->next = NULL;
+            (*(parameters->distributions))->string = parameters->dirName;
+            (*(parameters->distributions))->count = totalTokens;
+            (*(parameters->distributions))->firstChild = NULL;
             curFile = parameters->distributions;
         }
         else {
-            parentNode* ptr = parameters->distributions;
+            parentNode* ptr = *(parameters->distributions);
             parentNode* prev = NULL;
             parentNode* newNode = malloc(sizeof(node*));
             newNode->string = parameters->dirName;
@@ -131,22 +148,24 @@ void* fileHandle(void* input) {
                 ptr = ptr->next;
             }
             if(prev == NULL) {
-                newNode->next = parameters->distributions;
-                parameters->distributions = newNode;
+                newNode->next = *(parameters->distributions);
+                *(parameters->distributions) = newNode;
             }
             else
             {
                 newNode->next = ptr;
                 prev->next = newNode;
             }
-            curFile = newNode;
+            curFile = &newNode;
         }
     }
     pthread_mutex_unlock(parameters->lock);
-	for (int i = 0; i < 1000; i++){
+    
+	for(int i = 0; i < 1000; i++){
 		node* ptr = hashTable[i];
 		while (ptr != NULL){
 	        insertToken(ptr, totalTokens, curFile);
+            ptr = ptr->next;
         }
     }
     free(parameters);
