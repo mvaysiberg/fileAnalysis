@@ -38,10 +38,10 @@ void* directoryHandle(void* input) {
             newNode->next = NULL;
             (*(parameters->tail))->next = newNode;
             *(parameters->tail) = newNode;
-            arguments->tail = &newNode;
+            arguments->tail = parameters->tail;
             pthread_mutex_unlock(parameters->threadLock);
 
-            pthread_create(&((*(parameters->tail))->thread), NULL, directoryHandle, (void*)arguments);
+            pthread_create(&(newNode->thread), NULL, directoryHandle, (void*)arguments);
         }
         else if(dir->d_type == DT_REG) {
             file_args* fileArgs = malloc(sizeof(file_args));
@@ -56,7 +56,7 @@ void* directoryHandle(void* input) {
             *(parameters->tail) = newNode;
             pthread_mutex_unlock(parameters->threadLock);
 
-            pthread_create(&((*(parameters->tail))->thread), NULL, fileHandle, (void*)fileArgs);
+            pthread_create(&(newNode->thread), NULL, fileHandle, (void*)fileArgs);
         }
         else {
             free(filePath);
