@@ -36,12 +36,12 @@ void* directoryHandle(void* input) {
             pthread_mutex_lock(parameters->threadLock);
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
-            (parameters->tail)->next = newNode;
+            (*(parameters->tail))->next = newNode;
             parameters->tail = newNode;
             arguments->tail = newNode;
             pthread_mutex_unlock(parameters->threadLock);
 
-            pthread_create(&((parameters->tail)->thread), NULL, directoryHandle, (void*)arguments);
+            pthread_create(&((*(parameters->tail))->thread), NULL, directoryHandle, (void*)arguments);
         }
         else if(dir->d_type == DT_REG) {
             file_args* fileArgs = malloc(sizeof(file_args));
@@ -52,11 +52,11 @@ void* directoryHandle(void* input) {
             pthread_mutex_lock(parameters->threadLock);
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
-            (parameters->tail)->next = newNode;
+            (*(parameters->tail))->next = newNode;
             parameters->tail = newNode;
             pthread_mutex_unlock(parameters->threadLock);
 
-            pthread_create(&((parameters->tail)->thread), NULL, fileHandle, (void*)fileArgs);
+            pthread_create(&((*(parameters->tail))->thread), NULL, fileHandle, (void*)fileArgs);
         }
         else {
             free(filePath);

@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
     strcpy(arguments->dirName, argv[1]);
     arguments->distributionsLock = distributionsMutex;
     arguments->threadLock = threadMutex;
-    arguments->tail = head;
+    arguments->tail = &head;
     arguments->distributions = &distributions;
 
     pthread_create(&(head->thread), NULL, directoryHandle, (void*)arguments);

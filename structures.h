@@ -36,7 +36,7 @@ typedef struct arg_struct {
     char* dirName;
     pthread_mutex_t* distributionsLock;
     pthread_mutex_t* threadLock;
-    threadNode* tail;
+    threadNode** tail;
     parentNode** distributions;
 } args;
 
