@@ -66,7 +66,7 @@ void* directoryHandle(void* input) {
     pthread_exit(NULL);
 }
 //Inserts a file's token distrubtion into the distribution 2-D linked list
-//It is assumed that input has the forms of a file_args struct (guaranteed by directoryHandle)
+//It is assumed that input has the form of a file_args struct (guaranteed by directoryHandle)
 //Checks the following errors: file not accessible, and warns the user, frees, and exits
 void* fileHandle(void* input) {
 	file_args *parameters = (file_args*)input;
