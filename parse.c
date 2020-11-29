@@ -29,32 +29,32 @@ void* directoryHandle(void* input) {
             args* arguments = malloc(sizeof(args));
             arguments->currDir = opendir(filePath);
             arguments->dirName = filePath;
-            arguments->lock = parameters->lock;
-	    arguments->distributionsLock = parameters->distributionsLock;
+            arguments->distributionsLock = parameters->distributionsLock;
+	        arguments->threadLock = parameters->threadLock;
             arguments->distributions = parameters->distributions;
             
-            pthread_mutex_lock(parameters->lock);
+            pthread_mutex_lock(parameters->threadLock);
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
             (parameters->tail)->next = newNode;
             parameters->tail = newNode;
             arguments->tail = newNode;
-            pthread_mutex_unlock(parameters->lock);
+            pthread_mutex_unlock(parameters->threadLock);
 
             pthread_create(&((parameters->tail)->thread), NULL, directoryHandle, (void*)arguments);
         }
         else if(dir->d_type == DT_REG) {
             file_args* fileArgs = malloc(sizeof(file_args));
             fileArgs->dirName = filePath;
-            fileArgs->lock = parameters->distributionsLock;
+            fileArgs->distributionsLock = parameters->distributionsLock;
             fileArgs->distributions = parameters->distributions;
             
-            pthread_mutex_lock(parameters->lock);
+            pthread_mutex_lock(parameters->threadLock);
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
             (parameters->tail)->next = newNode;
             parameters->tail = newNode;
-            pthread_mutex_unlock(parameters->lock);
+            pthread_mutex_unlock(parameters->threadLock);
 
             pthread_create(&((parameters->tail)->thread), NULL, fileHandle, (void*)fileArgs);
         }
@@ -132,7 +132,7 @@ void* fileHandle(void* input) {
         }
     }
     //Inserting file node into the 2-D linked list
-    pthread_mutex_lock(parameters->lock);
+    pthread_mutex_lock(parameters->distributionsLock);
     if(*(parameters->distributions) == NULL) {
         *(parameters->distributions) = malloc(sizeof(parentNode));
         (*(parameters->distributions))->next = NULL;
@@ -161,7 +161,7 @@ void* fileHandle(void* input) {
             prev->next = newNode;
         }
     }
-    pthread_mutex_unlock(parameters->lock);
+    pthread_mutex_unlock(parameters->distributionsLock);
     
     free(parameters);
     freeHash(hashTable);

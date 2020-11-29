@@ -34,15 +34,15 @@ typedef struct _threadNode{
 typedef struct arg_struct {
     DIR* currDir;
     char* dirName;
-    pthread_mutex_t* lock;
     pthread_mutex_t* distributionsLock;
+    pthread_mutex_t* threadLock;
     threadNode* tail;
     parentNode** distributions;
 } args;
 
 typedef struct _file_args {
     char* dirName;
-    pthread_mutex_t* lock;
+    pthread_mutex_t* distributionsLock;
     parentNode** distributions;
 } file_args;
 int getBucket(char string[]);

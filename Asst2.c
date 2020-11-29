@@ -32,10 +32,10 @@ int main(int argc, char* argv[]){
         printf("Invalid directory\n");
         exit(0);
     }
-    pthread_mutex_t *mutex = malloc(sizeof(pthread_mutex_t));
-    pthread_mutex_init(mutex, NULL);
     pthread_mutex_t *distributionsMutex = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(distributionsMutex, NULL);
+    pthread_mutex_t *threadMutex = malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(threadMutex, NULL);
 
     threadNode* head = malloc(sizeof(threadNode));
     head->next = NULL;
@@ -49,8 +49,8 @@ int main(int argc, char* argv[]){
     }else{
     	strcpy(arguments->dirName, argv[1]);
     }
-    arguments->lock = mutex;
     arguments->distributionsLock = distributionsMutex;
+    arguments->threadLock = threadMutex;
     arguments->tail = head;
     arguments->distributions = &distributions;
 
@@ -76,10 +76,10 @@ int main(int argc, char* argv[]){
         }
     }
     freeDistributions(distributions);
-    pthread_mutex_destroy(mutex);
-    free(mutex);
     pthread_mutex_destroy(distributionsMutex);
     free(distributionsMutex);
+    pthread_mutex_destroy(threadMutex);
+    free(threadMutex);
 }
 //Computes JSD of the two files
 //It is assumed that file1 and file2 are valid linked lists if they are not NULL(guaranteed by fileHandle)
