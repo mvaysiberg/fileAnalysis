@@ -17,7 +17,7 @@ node* mean(parentNode* file1, parentNode* file2);
 double KLD(node* mean, parentNode* file);
 
 
-
+//main takes a directory from STDIN, initializes, the token handling process
 int main(int argc, char* argv[]){
     if (argc == 1){
         printf("No input\n");
@@ -60,20 +60,7 @@ int main(int argc, char* argv[]){
     }
     else {
         nodePair* totalTokens = NULL;
-        nodePair* totalTokensTail = NULL;
-        parentNode* ptr = distributions;
-        while(ptr->next != NULL) { 
-            parentNode* ptrNext = ptr->next;
-            while(ptrNext != NULL) {
-                int sum = ptr->count + ptrNext->count;
-                insertPair(&totalTokensTail, sum, ptr, ptrNext);
-                ptrNext = ptrNext->next;
-                if(totalTokens == NULL) {
-                    totalTokens = totalTokensTail;
-                }
-            }
-            ptr = ptr->next;
-        }
+        sortTotalTokens(&totalTokens,distributions);
         while(totalTokens != NULL) {
             printJSD(JSD(totalTokens->first, totalTokens->second), totalTokens->first->string, totalTokens->second->string);
 	        nodePair* temp = totalTokens->next;

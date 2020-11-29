@@ -127,3 +127,19 @@ void freeNode(node* ptr){
         ptr = temp;
     }
 }
+
+void sortTotalTokens(nodePair ** totalTokens, parentNode* ptr){
+        nodePair* totalTokensTail = NULL;
+        while(ptr->next != NULL) { 
+            parentNode* ptrNext = ptr->next;
+            while(ptrNext != NULL) {
+                int sum = ptr->count + ptrNext->count;
+                insertPair(&totalTokensTail, sum, ptr, ptrNext);
+                ptrNext = ptrNext->next;
+                if(*totalTokens == NULL) {
+                    *totalTokens = totalTokensTail;
+                }
+            }
+            ptr = ptr->next;
+        }
+}
