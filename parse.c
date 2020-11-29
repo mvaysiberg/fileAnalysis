@@ -37,8 +37,8 @@ void* directoryHandle(void* input) {
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
             (*(parameters->tail))->next = newNode;
-            parameters->tail = newNode;
-            arguments->tail = newNode;
+            *(parameters->tail) = newNode;
+            arguments->tail = &newNode;
             pthread_mutex_unlock(parameters->threadLock);
 
             pthread_create(&((*(parameters->tail))->thread), NULL, directoryHandle, (void*)arguments);
@@ -53,7 +53,7 @@ void* directoryHandle(void* input) {
             threadNode* newNode = malloc(sizeof(threadNode));
             newNode->next = NULL;
             (*(parameters->tail))->next = newNode;
-            parameters->tail = newNode;
+            *(parameters->tail) = newNode;
             pthread_mutex_unlock(parameters->threadLock);
 
             pthread_create(&((*(parameters->tail))->thread), NULL, fileHandle, (void*)fileArgs);
