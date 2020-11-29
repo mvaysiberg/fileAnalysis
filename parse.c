@@ -62,6 +62,7 @@ void* directoryHandle(void* input) {
             free(filePath);
         }
     }
+    closedir(parameters->currDir);
     free(parameters->dirName);
     free(parameters);
     pthread_exit(NULL);
