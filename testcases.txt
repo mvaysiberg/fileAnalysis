@@ -1,40 +1,38 @@
 Test case 1
 parentDirectory
-A.txt (blank file)
-B.txt (blank file) (original file: 123456789)
-C.txt (with any number of tokens)
+    A.txt (blank file)
+    B.txt (blank file) (original file: 123456789)
+    C.txt (with any number of tokens)
 This should output 0 when comparing A.txt and B.txt as both are considered blank and 0.150515 when comparing one blank file to the file with tokens.
 
 Test case 2
 parentDirectory
-directoryA
-A.txt (has tokens: a a c d a) (original file: a A c D a)
-directoryB
--B.txt (has tokens: c b a d a) (original file: c B a d a)
+    directoryA
+        A.txt (has tokens: a a c d a) (original file: a A c D a)
+    directoryB
+        B.txt (has tokens: c b a d a) (original file: c B a d a)
 This should output 0 when comparing A.txt and B.txt since the tokens and the distribution of each are all the same. This also demonstrates that the token’s capitalization does not matter and the file can be in different directories.
 
 Test case 3
 parentDirectory
-A.txt (has tokens: --- abc- -abc a-b-c)
-B.txt (has tokens: no similar tokens) (original file: no1 si2m2i2lar to.ken’s)
+    A.txt (has tokens: --- abc- -abc a-b-c)
+    B.txt (has tokens: no similar tokens) (original file: no1 si2m2i2lar to.ken’s)
 This should output 0.301029 for all pairs since there are no similar tokens. In addition this shows that we consider hyphens to be tokens and ignore numbers and punctuations.
 
 Test case 4
 parentDirectory
 directoryA
-A.txt (has tokens: hi hi hi hello hi hi)
-B.txt (has tokens: hi hi hi hi hi hi)
-directoryB
-test.c (has tokens: int main int argc char argv return) 
-a.out (executable of test.c)
+    A.txt (has tokens: hi hi hi hello hi hi)
+    B.txt (has tokens: hi hi hi hi hi hi)
+    directoryB
+        test.c (has tokens: int main int argc char argv return) 
+    a.out (executable of test.c)
 This should output 0.026733 when comparing A.txt and B.txt since they are very similar. However, all other pairs should print 0.301030 because they have no similar tokens. This shows that executable files work and recursive directory handling also works.
-
-
 
 Test case 5
 parentDirectory
-A.txt (has token: one)
-B.txt (has tokens: one two)
-C.txt (has tokens: one two three)
-D.txt (has tokens: one two three four five six seven eight nine ten)
+    A.txt (has token: one)
+    B.txt (has tokens: one two)
+    C.txt (has tokens: one two three)
+    D.txt (has tokens: one two three four five six seven eight nine ten)
 The output demonstrates that we print the JSD of pairs in order of total tokens since the order is AB (3 tokens), AC (4 tokens), BC (5 tokens), AD (11 tokens), BD (12 tokens), CD (13 tokens).
