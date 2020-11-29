@@ -9,7 +9,8 @@
 #include <string.h>
 #include "structures.h"
 #include "parse.h"
-
+//Used to recursively traverse directories
+//It is assumed that input has the format of an args struct (guaranteed by main and previous directoryHandle)
 void* directoryHandle(void* input) {
     args *parameters = (args*)input;
     //burn through . and ..
@@ -64,7 +65,9 @@ void* directoryHandle(void* input) {
     free(parameters);
     pthread_exit(NULL);
 }
-
+//Inserts a file's token distrubtion into the distribution 2-D linked list
+//It is assumed that input has the forms of a file_args struct (guaranteed by directoryHandle)
+//Checks the following errors: file not accessible, and warns the user, frees, and exits
 void* fileHandle(void* input) {
 	file_args *parameters = (file_args*)input;
     FILE* fp = fopen(parameters->dirName, "r");
@@ -81,6 +84,7 @@ void* fileHandle(void* input) {
     int totalTokens = 0;
     int maxSize = 10;
     char* token = malloc(maxSize);
+    //Finding tokens
     while(!feof(fp)){
         char c = fgetc(fp);
         token[0] = '\0';
@@ -126,7 +130,7 @@ void* fileHandle(void* input) {
             ptr = ptr->next;
         }
     }
-
+    //Inserting file node into the 2-D linked list
     pthread_mutex_lock(parameters->lock);
     if(*(parameters->distributions) == NULL) {
         *(parameters->distributions) = malloc(sizeof(parentNode));

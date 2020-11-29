@@ -17,7 +17,8 @@ node* mean(parentNode* file1, parentNode* file2);
 double KLD(node* mean, parentNode* file);
 
 
-//main takes a directory from STDIN, initializes, the token handling process
+//Takes a directory from STDIN, initializes the token handling process, and calls functions to print the output
+//Checks the following errors: no input, more than one input, and invalid input, only 0 or 1 readable files in the directory structure, and prints a warning
 int main(int argc, char* argv[]){
     if (argc == 1){
         printf("No input\n");
@@ -28,7 +29,7 @@ int main(int argc, char* argv[]){
     }
     DIR* currDir = opendir(argv[1]);
     if (currDir == NULL){
-        printf("Invalid file\n");
+        printf("Invalid directory\n");
         exit(0);
     }
     pthread_mutex_t *mutex = malloc(sizeof(pthread_mutex_t));
@@ -50,7 +51,6 @@ int main(int argc, char* argv[]){
     
     freeThread(head);
 
-    
 
     if(distributions == NULL) {
         printf("No files\n");
@@ -72,7 +72,8 @@ int main(int argc, char* argv[]){
     pthread_mutex_destroy(mutex);
     free(mutex);
 }
-
+//Computes JSD of the two files
+//It is assumed that file1 and file2 are valid linked lists if they are not NULL(guaranteed by fileHandle)
 double JSD(parentNode* file1, parentNode* file2){
     node* meanptr = mean(file1, file2);
     double kld1 = KLD(meanptr, file1);
@@ -80,7 +81,8 @@ double JSD(parentNode* file1, parentNode* file2){
     freeNode(meanptr);
     return 0.5*(kld1 + kld2);
 }
-
+//Prints formatted JSD
+//Assumed file1 and file2 are not NULL(guaranteed by directoryHandle)
 void printJSD(double value, char* file1, char* file2) {
     if(value >= 0 && value <= 0.1) {
         printf("\033[0;31m");
@@ -100,7 +102,8 @@ void printJSD(double value, char* file1, char* file2) {
     printf("%lf\033[0m \"%s\" and \"%s\"\n", value, file1, file2);
 
 }
-
+//Creates a sorted linked list in increasing order by total tokens that contains the mean of two token distributions
+//It is assumed that file1 and file2 are valid linked lists if they are not NULL(guaranteed by fileHandle)
 node* mean(parentNode* file1, parentNode* file2) {
     node* output = NULL;
     node* ptr = NULL;
@@ -168,7 +171,8 @@ node* mean(parentNode* file1, parentNode* file2) {
     }
     return output;
 }
-
+//Computes the KLD for each file
+//It is assumed that file is not NULL (guaranteed by fileHandle)
 double KLD(node* mean, parentNode* file) {
     if(mean == NULL) {
         return 0;
