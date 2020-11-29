@@ -41,7 +41,11 @@ int main(int argc, char* argv[]){
 
     arguments->currDir = currDir;
     arguments->dirName = malloc(strlen(argv[1]) + 1);
-    strcpy(arguments->dirName, argv[1]);
+    if (argv[1][0] == '\"'){
+    	strncpy(arguments->dirName, argv[1] + 1, strlen(argv[1])-2);
+    }else{
+    	strcpy(arguments->dirName, argv[1]);
+    }
     arguments->lock = mutex;
     arguments->tail = head;
     arguments->distributions = &distributions;
