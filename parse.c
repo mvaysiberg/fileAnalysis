@@ -30,6 +30,7 @@ void* directoryHandle(void* input) {
             arguments->currDir = opendir(filePath);
             arguments->dirName = filePath;
             arguments->lock = parameters->lock;
+	    arguments->distributionsLock = parameters->distributionsLock;
             arguments->distributions = parameters->distributions;
             
             pthread_mutex_lock(parameters->lock);
@@ -45,7 +46,7 @@ void* directoryHandle(void* input) {
         else if(dir->d_type == DT_REG) {
             file_args* fileArgs = malloc(sizeof(file_args));
             fileArgs->dirName = filePath;
-            fileArgs->lock = parameters->lock;
+            fileArgs->lock = parameters->distributionsLock;
             fileArgs->distributions = parameters->distributions;
             
             pthread_mutex_lock(parameters->lock);
